@@ -4,6 +4,7 @@ defmodule EfestoClient do
   """
   use Tesla
   plug(Tesla.Middleware.BaseUrl, Confex.get_env(:efesto_client, :api_url))
+  plug(Tesla.Middleware.JSON)
 
   alias EfestoClient.Body
 
@@ -49,7 +50,7 @@ defmodule EfestoClient do
 
   def destroy(endpoint, token \\ nil) do
     case Tesla.delete(endpoint, headers: EfestoClient.headers(token)) do
-      {:ok, response} ->
+      {:ok, _response} ->
         :ok
 
       {:error, error} ->
