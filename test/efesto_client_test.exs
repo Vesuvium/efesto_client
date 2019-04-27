@@ -2,6 +2,10 @@ defmodule EfestoClientTest do
   use ExUnit.Case
   import Dummy
 
+  test "the parse_properties function" do
+    assert EfestoClient.parse_properties(%{key: "value"}) == %{key: "value"}
+  end
+
   test "the read function" do
     dummy Tesla, [{"get", fn _x -> {:ok, "body"} end}] do
       result = EfestoClient.read("/endpoint")

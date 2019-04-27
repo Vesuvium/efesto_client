@@ -4,6 +4,10 @@ defmodule EfestoClient do
   """
   use Tesla
 
+  def parse_properties(properties) do
+    properties
+  end
+
   def read(endpoint) do
     case Tesla.get(endpoint) do
       {:ok, response} ->
