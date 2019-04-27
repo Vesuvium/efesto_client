@@ -4,13 +4,7 @@ defmodule EfestoClient do
   """
   use Tesla
 
-  def parse_properties(properties) do
-    properties
-  end
-
-  def parse_body(body) do
-    body
-  end
+  alias EfestoClient.Body
 
   def headers(token) do
     if token do
@@ -25,7 +19,7 @@ defmodule EfestoClient do
 
     case Tesla.get(endpoint, query: query, headers: headers) do
       {:ok, response} ->
-        EfestoClient.parse_body(response.body)
+        Body.parse(response.body)
 
       {:error, error} ->
         error
@@ -35,7 +29,7 @@ defmodule EfestoClient do
   def write(endpoint, data, token \\ nil) do
     case Tesla.post(endpoint, data, headers: EfestoClient.headers(token)) do
       {:ok, response} ->
-        EfestoClient.parse_body(response.body)
+        Body.parse(response.body)
 
       {:error, error} ->
         error

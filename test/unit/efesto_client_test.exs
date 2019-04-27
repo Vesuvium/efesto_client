@@ -2,13 +2,7 @@ defmodule EfestoClientTest do
   use ExUnit.Case
   import Dummy
 
-  test "the parse_properties function" do
-    assert EfestoClient.parse_properties(%{key: "value"}) == %{key: "value"}
-  end
-
-  test "the parse_body function" do
-    assert EfestoClient.parse_body("body") == "body"
-  end
+  alias EfestoClient.Body
 
   test "the headers function" do
     assert EfestoClient.headers("token") == [{"Authorization", "Bearer token"}]
@@ -22,12 +16,14 @@ defmodule EfestoClientTest do
     response = {:ok, %Tesla.Env{status: 200, body: "hello"}}
 
     dummy Tesla, [{"get", fn _x, [_query, _headers] -> response end}] do
-      dummy EfestoClient, ["parse_body", "headers"] do
-        result = EfestoClient.read("/endpoint")
-        assert called(Tesla.get("/endpoint", query: [], headers: nil))
-        assert called(EfestoClient.headers(nil))
-        assert called(EfestoClient.parse_body("hello"))
-        assert result == "hello"
+      dummy Body, ["parse"] do
+        dummy EfestoClient, ["headers"] do
+          result = EfestoClient.read("/endpoint")
+          assert called(Tesla.get("/endpoint", query: [], headers: nil))
+          assert called(EfestoClient.headers(nil))
+          assert called(Body.parse("hello"))
+          assert result == "hello"
+        end
       end
     end
   end
@@ -36,9 +32,11 @@ defmodule EfestoClientTest do
     response = {:ok, %Tesla.Env{status: 200, body: "hello"}}
 
     dummy Tesla, [{"get", fn _x, [_query, _headers] -> response end}] do
-      dummy EfestoClient, ["parse_body", "headers"] do
-        EfestoClient.read("/endpoint", "query")
-        assert called(Tesla.get("/endpoint", query: "query", headers: nil))
+      dummy Body, ["parse"] do
+        dummy EfestoClient, ["headers"] do
+          EfestoClient.read("/endpoint", "query")
+          assert called(Tesla.get("/endpoint", query: "query", headers: nil))
+        end
       end
     end
   end
@@ -47,9 +45,11 @@ defmodule EfestoClientTest do
     response = {:ok, %Tesla.Env{status: 200, body: "hello"}}
 
     dummy Tesla, [{"get", fn _x, [_query, _headers] -> response end}] do
-      dummy EfestoClient, ["parse_body", "headers"] do
-        EfestoClient.read("/endpoint", [], "token")
-        assert called(EfestoClient.headers("token"))
+      dummy Body, ["parse"] do
+        dummy EfestoClient, ["headers"] do
+          EfestoClient.read("/endpoint", [], "token")
+          assert called(EfestoClient.headers("token"))
+        end
       end
     end
   end
@@ -66,11 +66,13 @@ defmodule EfestoClientTest do
     response = {:ok, %Tesla.Env{status: 200, body: "hello"}}
 
     dummy Tesla, [{"post", fn _x, _y, [_token] -> response end}] do
-      dummy EfestoClient, ["parse_body", "headers"] do
-        result = EfestoClient.write("/endpoint", "data")
-        assert called(Tesla.post("/endpoint", "data", headers: nil))
-        assert called(EfestoClient.parse_body("hello"))
-        assert result == "hello"
+      dummy Body, ["parse"] do
+        dummy EfestoClient, ["headers"] do
+          result = EfestoClient.write("/endpoint", "data")
+          assert called(Tesla.post("/endpoint", "data", headers: nil))
+          assert called(Body.parse("hello"))
+          assert result == "hello"
+        end
       end
     end
   end
@@ -79,9 +81,11 @@ defmodule EfestoClientTest do
     response = response = {:ok, %Tesla.Env{status: 200, body: "hello"}}
 
     dummy Tesla, [{"post", fn _x, _y, [_token] -> response end}] do
-      dummy EfestoClient, ["parse_body", "headers"] do
-        EfestoClient.write("/endpoint", "data", "token")
-        assert called(EfestoClient.headers("token"))
+      dummy Body, ["parse"] do
+        dummy EfestoClient, ["headers"] do
+          EfestoClient.write("/endpoint", "data", "token")
+          assert called(EfestoClient.headers("token"))
+        end
       end
     end
   end
