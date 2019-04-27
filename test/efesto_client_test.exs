@@ -6,6 +6,15 @@ defmodule EfestoClientTest do
     assert EfestoClient.parse_properties(%{key: "value"}) == %{key: "value"}
   end
 
+
+  test "the headers function" do
+    EfestoClient.headers("token") == [{"Authorization", "Bearer token"}]
+  end
+
+  test "the headers function with nil" do
+    EfestoClient.headers(nil) == []
+  end
+
   test "the read function" do
     dummy Tesla, [{"get", fn _x -> {:ok, "body"} end}] do
       result = EfestoClient.read("/endpoint")

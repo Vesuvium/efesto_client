@@ -8,6 +8,14 @@ defmodule EfestoClient do
     properties
   end
 
+
+  def headers(token) do
+    if token do
+      [{"Authorization", "Bearer #{token}"}]
+    else
+      []
+    end
+  end
   def read(endpoint) do
     case Tesla.get(endpoint) do
       {:ok, response} ->
