@@ -11,11 +11,11 @@ defmodule EfestoClientTest do
   end
 
   test "the headers function" do
-    EfestoClient.headers("token") == [{"Authorization", "Bearer token"}]
+    assert EfestoClient.headers("token") == [{"Authorization", "Bearer token"}]
   end
 
   test "the headers function with nil" do
-    EfestoClient.headers(nil) == []
+    assert EfestoClient.headers(nil) == []
   end
 
   test "the read function" do
