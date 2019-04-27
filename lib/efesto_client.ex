@@ -23,7 +23,7 @@ defmodule EfestoClient do
   def read(endpoint) do
     case Tesla.get(endpoint) do
       {:ok, response} ->
-        response
+        EfestoClient.parse_body(response.body)
 
       {:error, error} ->
         error

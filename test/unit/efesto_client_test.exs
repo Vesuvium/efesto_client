@@ -19,10 +19,15 @@ defmodule EfestoClientTest do
   end
 
   test "the read function" do
-    dummy Tesla, [{"get", fn _x -> {:ok, "body"} end}] do
-      result = EfestoClient.read("/endpoint")
-      assert called(Tesla.get("/endpoint"))
-      assert result == "body"
+    response = {:ok, %Tesla.Env{status: 200, body: "hello"}}
+
+    dummy Tesla, [{"get", fn _x -> response end}] do
+      dummy EfestoClient, ["parse_body"] do
+        result = EfestoClient.read("/endpoint")
+        assert called(Tesla.get("/endpoint"))
+        assert called(EfestoClient.parse_body("hello"))
+        assert result == "hello"
+      end
     end
   end
 
