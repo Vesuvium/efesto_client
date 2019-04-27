@@ -65,18 +65,29 @@ defmodule EfestoClientTest do
   test "the write function" do
     response = {:ok, %Tesla.Env{status: 200, body: "hello"}}
 
-    dummy Tesla, [{"post", fn _x, _y -> response end}] do
-      dummy EfestoClient, ["parse_body"] do
+    dummy Tesla, [{"post", fn _x, _y, [_token] -> response end}] do
+      dummy EfestoClient, ["parse_body", "headers"] do
         result = EfestoClient.write("/endpoint", "data")
-        assert called(Tesla.post("/endpoint", "data"))
+        assert called(Tesla.post("/endpoint", "data", headers: nil))
         assert called(EfestoClient.parse_body("hello"))
         assert result == "hello"
       end
     end
   end
 
+  test "the write function with a token" do
+    response = response = {:ok, %Tesla.Env{status: 200, body: "hello"}}
+
+    dummy Tesla, [{"post", fn _x, _y, [_token] -> response end}] do
+      dummy EfestoClient, ["parse_body", "headers"] do
+        EfestoClient.write("/endpoint", "data", "token")
+        assert called(EfestoClient.headers("token"))
+      end
+    end
+  end
+
   test "the write function when getting an error" do
-    dummy Tesla, [{"post", fn _x, _y -> {:error, "error"} end}] do
+    dummy Tesla, [{"post", fn _x, _y, [_token] -> {:error, "error"} end}] do
       assert EfestoClient.write("/endpoint", "data") == "error"
     end
   end

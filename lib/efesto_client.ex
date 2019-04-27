@@ -32,8 +32,8 @@ defmodule EfestoClient do
     end
   end
 
-  def write(endpoint, data) do
-    case Tesla.post(endpoint, data) do
+  def write(endpoint, data, token \\ nil) do
+    case Tesla.post(endpoint, data, headers: EfestoClient.headers(token)) do
       {:ok, response} ->
         EfestoClient.parse_body(response.body)
 
