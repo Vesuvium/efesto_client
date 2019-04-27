@@ -24,6 +24,7 @@ defmodule EfestoClient.MixProject do
       {:confex, "~> 3.4"},
       {:credo, "~> 0.9", only: [:dev, :test], runtime: false},
       {:dummy, "~> 1.1", only: [:dev, :test]},
+      {:ex_doc, ">= 0.0.0", only: :dev},
       {:tesla, "~> 1.2"}
     ]
   end
