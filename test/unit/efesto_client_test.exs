@@ -38,10 +38,15 @@ defmodule EfestoClientTest do
   end
 
   test "the write function" do
-    dummy Tesla, [{"post", fn _x, _y -> {:ok, "body"} end}] do
-      result = EfestoClient.write("/endpoint", "data")
-      assert called(Tesla.post("/endpoint", "data"))
-      assert result == "body"
+    response = {:ok, %Tesla.Env{status: 200, body: "hello"}}
+
+    dummy Tesla, [{"post", fn _x, _y -> response end}] do
+      dummy EfestoClient, ["parse_body"] do
+        result = EfestoClient.write("/endpoint", "data")
+        assert called(Tesla.post("/endpoint", "data"))
+        assert called(EfestoClient.parse_body("hello"))
+        assert result == "hello"
+      end
     end
   end
 

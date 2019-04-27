@@ -33,7 +33,7 @@ defmodule EfestoClient do
   def write(endpoint, data) do
     case Tesla.post(endpoint, data) do
       {:ok, response} ->
-        response
+        EfestoClient.parse_body(response.body)
 
       {:error, error} ->
         error
