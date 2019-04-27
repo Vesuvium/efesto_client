@@ -123,4 +123,27 @@ defmodule EfestoClientTest do
       end
     end
   end
+
+  test "the destroy function" do
+    response = {:ok, %Tesla.Env{status: 200, body: "hello"}}
+
+    dummy Tesla, [{"delete", fn _x, [_token] -> response end}] do
+      dummy EfestoClient, ["headers"] do
+        result = EfestoClient.destroy("/endpoint")
+        assert called(Tesla.delete("/endpoint", headers: nil))
+        assert result == :ok
+      end
+    end
+  end
+
+  test "the destroy function with a token" do
+    response = {:ok, %Tesla.Env{status: 204, body: nil}}
+
+    dummy Tesla, [{"delete", fn _x, [_token] -> response end}] do
+      dummy EfestoClient, ["headers"] do
+        EfestoClient.destroy("/endpoint", "token")
+        assert called(EfestoClient.headers("token"))
+      end
+    end
+  end
 end

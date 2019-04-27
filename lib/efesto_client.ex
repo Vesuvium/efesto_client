@@ -45,4 +45,14 @@ defmodule EfestoClient do
         error
     end
   end
+
+  def destroy(endpoint, token \\ nil) do
+    case Tesla.delete(endpoint, headers: EfestoClient.headers(token)) do
+      {:ok, response} ->
+        :ok
+
+      {:error, error} ->
+        error
+    end
+  end
 end
