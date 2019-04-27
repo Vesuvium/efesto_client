@@ -95,4 +95,32 @@ defmodule EfestoClientTest do
       assert EfestoClient.write("/endpoint", "data") == "error"
     end
   end
+
+  test "the edit function" do
+    response = {:ok, %Tesla.Env{status: 200, body: "hello"}}
+
+    dummy Tesla, [{"patch", fn _x, _y, [_token] -> response end}] do
+      dummy Body, ["parse"] do
+        dummy EfestoClient, ["headers"] do
+          result = EfestoClient.edit("/endpoint", "data")
+          assert called(Tesla.patch("/endpoint", "data", headers: nil))
+          assert called(Body.parse("hello"))
+          assert result == "hello"
+        end
+      end
+    end
+  end
+
+  test "the edit function with a token" do
+    response = response = {:ok, %Tesla.Env{status: 200, body: "hello"}}
+
+    dummy Tesla, [{"patch", fn _x, _y, [_token] -> response end}] do
+      dummy Body, ["parse"] do
+        dummy EfestoClient, ["headers"] do
+          EfestoClient.edit("/endpoint", "data", "token")
+          assert called(EfestoClient.headers("token"))
+        end
+      end
+    end
+  end
 end

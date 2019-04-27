@@ -35,4 +35,14 @@ defmodule EfestoClient do
         error
     end
   end
+
+  def edit(endpoint, data, token \\ nil) do
+    case Tesla.patch(endpoint, data, headers: EfestoClient.headers(token)) do
+      {:ok, response} ->
+        Body.parse(response.body)
+
+      {:error, error} ->
+        error
+    end
+  end
 end
