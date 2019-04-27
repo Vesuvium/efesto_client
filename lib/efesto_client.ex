@@ -13,4 +13,14 @@ defmodule EfestoClient do
         error
     end
   end
+
+  def write(endpoint, data) do
+    case Tesla.post(endpoint, data) do
+      {:ok, response} ->
+        response
+
+      {:error, error} ->
+        error
+    end
+  end
 end

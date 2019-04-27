@@ -15,4 +15,18 @@ defmodule EfestoClientTest do
       assert EfestoClient.read("/endpoint") == "error"
     end
   end
+
+  test "the write function" do
+    dummy Tesla, [{"post", fn _x, _y -> {:ok, "body"} end}] do
+      result = EfestoClient.write("/endpoint", "data")
+      assert called(Tesla.post("/endpoint", "data"))
+      assert result == "body"
+    end
+  end
+
+  test "the write function when getting an error" do
+    dummy Tesla, [{"post", fn _x, _y -> {:error, "error"} end}] do
+      assert EfestoClient.write("/endpoint", "data") == "error"
+    end
+  end
 end
