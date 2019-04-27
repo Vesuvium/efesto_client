@@ -4,6 +4,11 @@ defmodule EfestoClient.BodyTest do
   alias EfestoClient.Body
 
   test "parsing a body" do
-    assert Body.parse("body") == "body"
+    assert Body.parse(%{}) == %{}
+  end
+
+  test "parsing a body with properties" do
+    result = Body.parse(%{"properties" => %{"key" => "value"}})
+    assert result == %{"key" => "value"}
   end
 end

@@ -1,5 +1,11 @@
 defmodule EfestoClient.Body do
   def parse(body) do
-    body
+    cond do
+      body["properties"] ->
+        body["properties"]
+
+      true ->
+        body
+    end
   end
 end
