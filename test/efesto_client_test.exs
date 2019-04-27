@@ -6,6 +6,9 @@ defmodule EfestoClientTest do
     assert EfestoClient.parse_properties(%{key: "value"}) == %{key: "value"}
   end
 
+  test "the parse_body function" do
+    assert EfestoClient.parse_body("body") == "body"
+  end
 
   test "the headers function" do
     EfestoClient.headers("token") == [{"Authorization", "Bearer token"}]

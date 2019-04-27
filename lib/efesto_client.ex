@@ -8,6 +8,9 @@ defmodule EfestoClient do
     properties
   end
 
+  def parse_body(body) do
+    body
+  end
 
   def headers(token) do
     if token do
@@ -16,6 +19,7 @@ defmodule EfestoClient do
       []
     end
   end
+
   def read(endpoint) do
     case Tesla.get(endpoint) do
       {:ok, response} ->
