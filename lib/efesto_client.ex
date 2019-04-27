@@ -19,7 +19,7 @@ defmodule EfestoClient do
   def read(endpoint, query \\ [], token \\ nil) do
     headers = EfestoClient.headers(token)
 
-    case Tesla.get(endpoint, query: query, headers: headers) do
+    case EfestoClient.get(endpoint, query: query, headers: headers) do
       {:ok, response} ->
         Body.parse(response.body)
 
@@ -29,7 +29,9 @@ defmodule EfestoClient do
   end
 
   def write(endpoint, data, token \\ nil) do
-    case Tesla.post(endpoint, data, headers: EfestoClient.headers(token)) do
+    headers = EfestoClient.headers(token)
+
+    case EfestoClient.post(endpoint, data, headers: headers) do
       {:ok, response} ->
         Body.parse(response.body)
 
@@ -39,7 +41,9 @@ defmodule EfestoClient do
   end
 
   def edit(endpoint, data, token \\ nil) do
-    case Tesla.patch(endpoint, data, headers: EfestoClient.headers(token)) do
+    headers = EfestoClient.headers(token)
+
+    case EfestoClient.patch(endpoint, data, headers: headers) do
       {:ok, response} ->
         Body.parse(response.body)
 
@@ -49,7 +53,9 @@ defmodule EfestoClient do
   end
 
   def destroy(endpoint, token \\ nil) do
-    case Tesla.delete(endpoint, headers: EfestoClient.headers(token)) do
+    headers = EfestoClient.headers(token)
+
+    case EfestoClient.delete(endpoint, headers: headers) do
       {:ok, _response} ->
         :ok
 
