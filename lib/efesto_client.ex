@@ -3,6 +3,7 @@ defmodule EfestoClient do
   Client for Efesto
   """
   use Tesla
+  plug(Tesla.Middleware.BaseUrl, Confex.get_env(:efesto_client, :api_url))
 
   alias EfestoClient.Body
 
