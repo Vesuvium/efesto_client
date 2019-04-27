@@ -11,4 +11,10 @@ defmodule EfestoClient.BodyTest do
     result = Body.parse(%{"properties" => %{"key" => "value"}})
     assert result == %{"key" => "value"}
   end
+
+  test "parsing a body with entities" do
+    body = %{"entities" => [%{"properties" => %{"key" => "value"}}]}
+    result = Body.parse(body)
+    assert result == [%{"key" => "value"}]
+  end
 end
