@@ -21,10 +21,10 @@ defmodule EfestoClientTest do
   test "the read function" do
     response = {:ok, %Tesla.Env{status: 200, body: "hello"}}
 
-    dummy Tesla, [{"get", fn _x, [_headers] -> response end}] do
+    dummy Tesla, [{"get", fn _x, [_query, _headers] -> response end}] do
       dummy EfestoClient, ["parse_body", "headers"] do
         result = EfestoClient.read("/endpoint")
-        assert called(Tesla.get("/endpoint", headers: nil))
+        assert called(Tesla.get("/endpoint", query: [], headers: nil))
         assert called(EfestoClient.headers(nil))
         assert called(EfestoClient.parse_body("hello"))
         assert result == "hello"
@@ -32,19 +32,32 @@ defmodule EfestoClientTest do
     end
   end
 
+  test "the read function with a query" do
+    response = {:ok, %Tesla.Env{status: 200, body: "hello"}}
+
+    dummy Tesla, [{"get", fn _x, [_query, _headers] -> response end}] do
+      dummy EfestoClient, ["parse_body", "headers"] do
+        EfestoClient.read("/endpoint", "query")
+        assert called(Tesla.get("/endpoint", query: "query", headers: nil))
+      end
+    end
+  end
+
   test "the read function with a token" do
     response = {:ok, %Tesla.Env{status: 200, body: "hello"}}
 
-    dummy Tesla, [{"get", fn _x, [_headers] -> response end}] do
+    dummy Tesla, [{"get", fn _x, [_query, _headers] -> response end}] do
       dummy EfestoClient, ["parse_body", "headers"] do
-        EfestoClient.read("/endpoint", "token")
+        EfestoClient.read("/endpoint", [], "token")
         assert called(EfestoClient.headers("token"))
       end
     end
   end
 
   test "the read function when getting an error" do
-    dummy Tesla, [{"get", fn _x, [_headers] -> {:error, "error"} end}] do
+    get = fn _x, [_query, _headers] -> {:error, "error"} end
+
+    dummy Tesla, [{"get", get}] do
       assert EfestoClient.read("/endpoint") == "error"
     end
   end

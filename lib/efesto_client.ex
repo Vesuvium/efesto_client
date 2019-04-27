@@ -20,8 +20,10 @@ defmodule EfestoClient do
     end
   end
 
-  def read(endpoint, token \\ nil) do
-    case Tesla.get(endpoint, headers: EfestoClient.headers(token)) do
+  def read(endpoint, query \\ [], token \\ nil) do
+    headers = EfestoClient.headers(token)
+
+    case Tesla.get(endpoint, query: query, headers: headers) do
       {:ok, response} ->
         EfestoClient.parse_body(response.body)
 
