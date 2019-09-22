@@ -22,9 +22,9 @@ defmodule EfestoClient.MixProject do
   defp deps do
     [
       {:confex, "~> 3.4"},
-      {:credo, "~> 0.9", only: [:dev, :test], runtime: false},
+      {:credo, "~> 0.9", only: :dev, runtime: false},
       {:dummy, "~> 1.1", only: [:dev, :test]},
-      {:ex_doc, ">= 0.0.0", only: :dev},
+      {:ex_doc, ">= 0.0.0", only: :dev, runtime: false},
       {:tesla, "~> 1.2"}
     ]
   end
