@@ -5,11 +5,13 @@ defmodule EfestoClientTest do
   alias EfestoClient.Body
 
   test "the headers function" do
-    assert EfestoClient.headers("token") == [{"Authorization", "Bearer token"}]
+    assert EfestoClient.headers("token") == [{"authorization", "Bearer token"}]
   end
 
   test "the headers function with nil" do
-    assert EfestoClient.headers(nil) == []
+    dummy Confex, [{"get_env", fn _a, _b -> "confex" end}] do
+      assert EfestoClient.headers(nil) == [{"authorization", "Bearer confex"}]
+    end
   end
 
   test "the read function" do

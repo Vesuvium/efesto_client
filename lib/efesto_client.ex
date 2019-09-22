@@ -10,9 +10,9 @@ defmodule EfestoClient do
 
   def headers(token) do
     if token do
-      [{"Authorization", "Bearer #{token}"}]
+      [{"authorization", "Bearer #{token}"}]
     else
-      []
+      [{"authorization", "Bearer #{Confex.get_env(:efesto_client, :token)}"}]
     end
   end
 
